@@ -1,4 +1,4 @@
-# this module includes the class for the key entities: Book, User, And Author.
+# this module includes the class for the key entity: Book.
 
 
 class Book:
