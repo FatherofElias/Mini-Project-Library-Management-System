@@ -1,8 +1,6 @@
 # This is the main course of the program; Library Management System
 
-
 import re
-import os
 from book import Book
 from user import User
 from author import Author
@@ -12,60 +10,6 @@ class LibraryManagementSystem:
         self.books = []
         self.users = []
         self.authors = []
-        self.load_data()
-
-    def load_data(self):
-        self.load_books()
-        self.load_users()
-        self.load_authors()
-
-    def save_data(self):
-        self.save_books()
-        self.save_users()
-        self.save_authors()
-
-    def load_books(self):
-        if os.path.exists('books.txt'):
-            with open('books.txt', 'r') as file:
-                for line in file:
-                    title, author, genre, publication_date, is_available = line.strip().split(',')
-                    book = Book(title, author, genre, publication_date)
-                    if is_available == 'False':
-                        book.borrow()
-                    self.books.append(book)
-
-    def save_books(self):
-        with open('books.txt', 'w') as file:
-            for book in self.books:
-                file.write(f"{book.get_title()},{book.get_author()},{book.get_genre()},{book.get_publication_date()},{book.is_available()}\n")
-
-    def load_users(self):
-        if os.path.exists('users.txt'):
-            with open('users.txt', 'r') as file:
-                for line in file:
-                    name, library_id, borrowed_books = line.strip().split(',')
-                    user = User(name, library_id)
-                    user.borrow_book(borrowed_books.split(';'))
-                    self.users.append(user)
-
-    def save_users(self):
-        with open('users.txt', 'w') as file:
-            for user in self.users:
-                borrowed_books = ';'.join(user.get_borrowed_books())
-                file.write(f"{user.get_name()},{user.get_library_id()},{borrowed_books}\n")
-
-    def load_authors(self):
-        if os.path.exists('authors.txt'):
-            with open('authors.txt', 'r') as file:
-                for line in file:
-                    name, biography = line.strip().split(',')
-                    author = Author(name, biography)
-                    self.authors.append(author)
-
-    def save_authors(self):
-        with open('authors.txt', 'w') as file:
-            for author in self.authors:
-                file.write(f"{author.get_name()},{author.get_biography()}\n")
 
     def main_menu(self):
         while True:
@@ -84,8 +28,73 @@ class LibraryManagementSystem:
             elif choice == '3':
                 self.author_operations()
             elif choice == '4':
-                self.save_data()
                 print("Thank you for using the Library Management System!")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
+    def book_operations(self):
+        while True:
+            print("\nBook Operations:")
+            print("1. Add a new book")
+            print("2. Borrow a book")
+            print("3. Return a book")
+            print("4. Search for a book")
+            print("5. Display all books")
+            print("6. Back to Main Menu")
+            choice = input("Enter your choice: ")
+
+            if choice == '1':
+                self.add_book()
+            elif choice == '2':
+                self.borrow_book()
+            elif choice == '3':
+                self.return_book()
+            elif choice == '4':
+                self.search_book()
+            elif choice == '5':
+                self.display_books()
+            elif choice == '6':
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
+    def user_operations(self):
+        while True:
+            print("\nUser Operations:")
+            print("1. Add a new user")
+            print("2. View user details")
+            print("3. Display all users")
+            print("4. Back to Main Menu")
+            choice = input("Enter your choice: ")
+
+            if choice == '1':
+                self.add_user()
+            elif choice == '2':
+                self.view_user()
+            elif choice == '3':
+                self.display_users()
+            elif choice == '4':
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
+    def author_operations(self):
+        while True:
+            print("\nAuthor Operations:")
+            print("1. Add a new author")
+            print("2. View author details")
+            print("3. Display all authors")
+            print("4. Back to Main Menu")
+            choice = input("Enter your choice: ")
+
+            if choice == '1':
+                self.add_author()
+            elif choice == '2':
+                self.view_author()
+            elif choice == '3':
+                self.display_authors()
+            elif choice == '4':
                 break
             else:
                 print("Invalid choice. Please try again.")
@@ -116,7 +125,7 @@ class LibraryManagementSystem:
                     book.borrow()
                     print(f"Book '{title}' borrowed successfully.")
                     return
-            print(f"Book '{title}' not found or not available.")
+            print(f"Book '{title}' not found or already being borrowed.")
         except Exception as e:
             print(f"An error occurred: {e}")
 
@@ -215,15 +224,13 @@ class LibraryManagementSystem:
             print(f"An error occurred: {e}")
 
     def display_authors(self):
-        try:
-            if not self.authors:
-                print("No authors available.")
-            else:
-                print("Authors available:")
-                for author in self.authors:
-                    print(f"Author: {author.get_name()}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+        if not self.authors:
+            print("No authors available.")
+        else:
+            print("Authors available:")
+            for author in self.authors:
+                print(f"Author: {author.get_name()}")
+
 
 # Create an instance of the LibraryManagementSystem and run the main menu
 if __name__ == "__main__":
