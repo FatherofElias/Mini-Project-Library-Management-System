@@ -60,7 +60,7 @@ Display All Users:
 
 display_users: Displays a list of all users in the library.
 
-Add a Mew Author: 
+Add a New Author: 
 
 add_author: Prompts the user to enter the author’s name and biography, creates a new Author object, and adds it to the list of authors. If an error occurs, it prints an error message.
 
@@ -72,6 +72,9 @@ Display All Authors:
 
 display_authors: Displays a list of all authors in the library. If an error occurs, it prints an error message.
 
+               
+               
+                                                                        
                 How to Use the Library Management System:
 Start the Application: Run the script to start the Library Management System. The main menu will be displayed.
 Navigate the Main Menu: Enter the number corresponding to the operation you want to perform (1 for Book Operations, 2 for User Operations, 3 for Author Operations, 4 to Quit).
