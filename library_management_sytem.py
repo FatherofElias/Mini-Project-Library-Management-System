@@ -103,7 +103,7 @@ class LibraryManagementSystem:
     def add_book(self):
         try:
             title = input("Enter book title: ")
-            author = input("Enter book author: ")
+            author_name = input("Enter book author: ")
             genre = input("Enter book genre: ")
             publication_date = input("Enter publication date (YYYY-MM-DD): ")
 
@@ -111,30 +111,54 @@ class LibraryManagementSystem:
             if not re.match(r"\d{4}-\d{2}-\d{2}", publication_date):
                 raise ValueError("Invalid date format. Please use YYYY-MM-DD.")
 
-            new_book = Book(title, author, genre, publication_date)
+            # Check if the author already exists
+            author = next((author for author in self.authors if author.get_name() == author_name), None)
+            if not author:
+                biography = input("Enter author biography: ")
+                author = Author(author_name, biography)
+                self.authors.append(author)
+                print(f"Author '{author_name}' added successfully.")
+
+            new_book = Book(title, author_name, genre, publication_date)
             self.books.append(new_book)
-            print(f"Book '{title}' by {author} added successfully.")
+            print(f"Book '{title}' by {author_name} added successfully.")
         except ValueError as e:
             print(e)
 
+
+
     def borrow_book(self):
         try:
+            library_id = input("Enter your library ID: ")
+            user = next((user for user in self.users if user.get_library_id() == library_id), None)
+            if not user:
+                print(f"User with Library ID '{library_id}' not found.")
+                return
+
             title = input("Enter book title to borrow: ")
             for book in self.books:
                 if book.get_title() == title and book.is_available():
                     book.borrow()
+                    user.borrow_book(title)
                     print(f"Book '{title}' borrowed successfully.")
                     return
-            print(f"Book '{title}' not found or already being borrowed.")
+            print(f"Book '{title}' not found or already borrowed.")
         except Exception as e:
             print(f"An error occurred: {e}")
 
     def return_book(self):
         try:
+            library_id = input("Enter your library ID: ")
+            user = next((user for user in self.users if user.get_library_id() == library_id), None)
+            if not user:
+                print(f"User with Library ID '{library_id}' not found.")
+                return
+
             title = input("Enter book title to return: ")
             for book in self.books:
                 if book.get_title() == title and not book.is_available():
                     book.return_book()
+                    user.return_book(title)
                     print(f"Book '{title}' returned successfully.")
                     return
             print(f"Book '{title}' not found or already available.")
@@ -224,13 +248,15 @@ class LibraryManagementSystem:
             print(f"An error occurred: {e}")
 
     def display_authors(self):
-        if not self.authors:
-            print("No authors available.")
-        else:
-            print("Authors available:")
-            for author in self.authors:
-                print(f"Author: {author.get_name()}")
-
+        try:
+            if not self.authors:
+               print("No authors available.")
+            else:
+                print("Authors available:")
+                for author in self.authors:
+                    print(f"Author: {author.get_name()}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 # Create an instance of the LibraryManagementSystem and run the main menu
 if __name__ == "__main__":
