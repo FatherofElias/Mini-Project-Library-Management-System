@@ -193,7 +193,7 @@ class LibraryManagementSystem:
             name = input("Enter user name: ")
             library_id = input("Enter library ID: ")
 
-            # Validate library ID format (e.g., must be alphanumeric)
+            # Validate library ID format (must be alphanumeric)
             if not re.match(r"^[a-zA-Z0-9]+$", library_id):
                 raise ValueError("Invalid library ID format. Please use alphanumeric characters.")
 
